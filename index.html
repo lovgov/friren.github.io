@@ -3,437 +3,802 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Защита от DDoS-атак | Информационный ресурс</title>
+    <title>Frontend Masters | Информационный сайт по фронтенд-разработке</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Общие стили */
+        /* Базовые стили */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
-        
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
         .container {
-            width: 90%;
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 15px;
+            padding: 0 20px;
         }
-        
-        /* Шапка сайта */
+
+        /* Шапка и навигация */
         header {
-            background: linear-gradient(135deg, #1a2a6c, #2a4d8e);
+            background-color: var(--secondary-color);
             color: white;
             padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        
+
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             font-size: 1.8rem;
-            font-weight: bold;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        .logo span {
-            color: #4CAF50;
+
+        .logo i {
+            color: var(--primary-color);
         }
-        
+
         nav ul {
             display: flex;
             list-style: none;
+            gap: 1.5rem;
         }
-        
-        nav ul li {
-            margin-left: 1.5rem;
-        }
-        
-        nav ul li a {
+
+        nav a {
             color: white;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
         }
-        
-        nav ul li a:hover {
-            color: #4CAF50;
+
+        nav a:hover, nav a.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
         }
-        
-        /* Главный баннер */
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Герой-секция */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
             background-size: cover;
             background-position: center;
             color: white;
-            padding: 5rem 0;
             text-align: center;
+            padding: 5rem 1rem;
+            margin-bottom: 2rem;
         }
-        
+
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 1rem;
         }
-        
+
         .hero p {
             font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto 2rem;
+            opacity: 0.9;
         }
-        
+
         .btn {
             display: inline-block;
-            background-color: #4CAF50;
+            background-color: var(--primary-color);
             color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 5px;
+            padding: 0.8rem 1.8rem;
+            border-radius: 4px;
             text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
         }
-        
+
         .btn:hover {
-            background-color: #3d8b40;
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
-        
+
         /* Основной контент */
         main {
-            padding: 3rem 0;
+            padding: 2rem 0;
         }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-            color: #1a2a6c;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+
+        section {
             margin-bottom: 3rem;
-        }
-        
-        .feature-card {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature-card h3 {
-            color: #1a2a6c;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-        
-        .feature-card p {
-            color: #666;
-        }
-        
-        /* Форумная секция */
-        .forum-preview {
-            background: white;
+            background-color: white;
             border-radius: 8px;
             padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
         }
-        
-        .forum-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        h2 {
+            color: var(--secondary-color);
             margin-bottom: 1.5rem;
-        }
-        
-        .forum-topics {
-            display: grid;
-            gap: 1rem;
-        }
-        
-        .topic {
-            padding: 1rem;
-            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 10px;
         }
-        
-        .topic-info h4 {
-            color: #1a2a6c;
-            margin-bottom: 0.5rem;
+
+        h2 i {
+            color: var(--primary-color);
         }
-        
-        .topic-meta {
-            color: #888;
-            font-size: 0.9rem;
-        }
-        
-        .topic-stats {
-            text-align: right;
-        }
-        
-        /* Подвал */
-        footer {
-            background-color: #1a2a6c;
-            color: white;
-            padding: 3rem 0 1.5rem;
-        }
-        
-        .footer-content {
+
+        /* Карточки технологий */
+        .tech-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
-        
-        .footer-section h3 {
+
+        .tech-card {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .tech-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tech-card i {
+            color: var(--primary-color);
+        }
+
+        /* Пример кода */
+        .code-example {
+            background-color: #2d3a4b;
+            color: #f8f8f2;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-example .comment {
+            color: #6272a4;
+        }
+
+        .code-example .keyword {
+            color: #ff79c6;
+        }
+
+        .code-example .function {
+            color: #50fa7b;
+        }
+
+        .code-example .string {
+            color: #f1fa8c;
+        }
+
+        /* Интерактивный пример */
+        .interactive-example {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .example-controls {
+            display: flex;
+            gap: 1rem;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .example-controls button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .example-controls button:hover {
+            background-color: #2980b9;
+        }
+
+        #exampleBox {
+            width: 200px;
+            height: 100px;
+            background-color: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin: 1rem auto;
+            transition: all 0.5s ease;
+        }
+
+        /* Дорожная карта */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .roadmap-item {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 1.2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .roadmap-item:first-child::before {
+            top: 1.5rem;
+        }
+
+        .roadmap-item:last-child::before {
+            bottom: calc(100% - 1.5rem);
+        }
+
+        .roadmap-number {
+            position: absolute;
+            left: 1rem;
+            top: 1.2rem;
+            width: 2rem;
+            height: 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        /* Ресурсы */
+        .resources-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .resources-list li {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .resources-list a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .resources-list a:hover {
+            color: var(--accent-color);
+        }
+
+        .resources-list i {
             font-size: 1.2rem;
         }
-        
-        .footer-section p, .footer-section a {
-            color: #ccc;
-            margin-bottom: 0.5rem;
-            display: block;
-            text-decoration: none;
-        }
-        
-        .footer-section a:hover {
+
+        /* Подвал */
+        footer {
+            background-color: var(--secondary-color);
             color: white;
-        }
-        
-        .copyright {
+            padding: 2rem 0;
             text-align: center;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #aaa;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            opacity: 0.7;
             font-size: 0.9rem;
         }
-        
+
         /* Адаптивность */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
-                text-align: center;
+                gap: 1rem;
             }
-            
+
             nav ul {
-                margin-top: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.8rem;
             }
-            
-            nav ul li {
-                margin: 0.5rem;
-            }
-            
+
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
-            
+
             .hero p {
                 font-size: 1rem;
+            }
+
+            section {
+                padding: 1.5rem;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .mobile-menu {
+                display: none;
+            }
+
+            .mobile-menu.active {
+                display: block;
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Шапка сайта -->
+    <!-- Шапка с навигацией -->
     <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">DDoS<span>Shield</span></div>
-                <nav>
-                    <ul>
-                        <li><a href="#home">Главная</a></li>
-                        <li><a href="#about">О проекте</a></li>
-                        <li><a href="#protection">Методы защиты</a></li>
-                        <li><a href="#tools">Инструменты</a></li>
-                        <li><a href="#forum">Форум</a></li>
-                        <li><a href="#contact">Контакты</a></li>
-                    </ul>
-                </nav>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <span>Frontend Masters</span>
             </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul class="mobile-menu" id="mobileMenu">
+                    <li><a href="#home" class="active">Главная</a></li>
+                    <li><a href="#technologies">Технологии</a></li>
+                    <li><a href="#examples">Примеры</a></li>
+                    <li><a href="#roadmap">Дорожная карта</a></li>
+                    <li><a href="#resources">Ресурсы</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <!-- Главный баннер -->
+    <!-- Герой-секция -->
     <section class="hero" id="home">
         <div class="container">
-            <h1>Комплексная защита от DDoS-атак</h1>
-            <p>Центр знаний для обмена опытом, обсуждения методов защиты и инструментов мониторинга от распределённых атак типа «отказ в обслуживании»</p>
-            <a href="#forum" class="btn">Присоединиться к обсуждению</a>
+            <h1>Фронтенд Разработка: Создание Современных Веб-Интерфейсов</h1>
+            <p>Изучите основные технологии, инструменты и лучшие практики для создания интерактивных, быстрых и доступных пользовательских интерфейсов.</p>
+            <a href="#technologies" class="btn">Начать изучение</a>
         </div>
     </section>
 
     <!-- Основной контент -->
     <main class="container">
-        <!-- О проекте -->
-        <section id="about">
-            <h2 class="section-title">О проекте</h2>
-            <div class="features">
-                <div class="feature-card">
-                    <h3>Наша миссия</h3>
-                    <p>Создание централизованного информационного ресурса для специалистов по кибербезопасности, системных администраторов и всех, кто интересуется защитой от DDoS-атак.</p>
+        <!-- Секция технологий -->
+        <section id="technologies">
+            <h2><i class="fas fa-cogs"></i> Основные Технологии</h2>
+            <p>Современная фронтенд-разработка строится на трех основных технологиях, каждая из которых решает свои задачи:</p>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3><i class="fab fa-html5"></i> HTML5</h3>
+                    <p>Язык разметки для создания структуры веб-страницы. Включает семантические теги, улучшающие доступность и SEO.</p>
                 </div>
-                <div class="feature-card">
-                    <h3>Цели проекта</h3>
-                    <p>Объединение экспертов для обмена опытом, обсуждения современных методов защиты и анализа новых угроз в области DDoS-атак.</p>
+                <div class="tech-card">
+                    <h3><i class="fab fa-css3-alt"></i> CSS3</h3>
+                    <p>Язык стилей для оформления веб-страниц. Позволяет создавать адаптивные дизайны, анимации и сложные визуальные эффекты.</p>
                 </div>
-                <div class="feature-card">
-                    <h3>Кому будет полезен</h3>
-                    <p>Владельцам сайтов, системным администраторам, специалистам по информационной безопасности и всем, кто хочет защитить свои интернет-ресурсы.</p>
+                <div class="tech-card">
+                    <h3><i class="fab fa-js"></i> JavaScript</h3>
+                    <p>Язык программирования для добавления интерактивности на веб-страницы. Позволяет создавать динамические интерфейсы и обрабатывать пользовательские события.</p>
+                </div>
+            </div>
+            
+            <p>Помимо основных технологий, современные разработчики используют препроцессоры (Sass, Less), фреймворки (React, Vue, Angular) и инструменты сборки (Webpack, Vite).</p>
+        </section>
+
+        <!-- Секция примеров кода -->
+        <section id="examples">
+            <h2><i class="fas fa-code"></i> Примеры Кода</h2>
+            <p>Ниже представлены примеры кода на основных фронтенд-технологиях:</p>
+            
+            <h3>HTML: Семантическая разметка</h3>
+            <div class="code-example">
+                <pre><code><span class="comment">&lt;!-- Пример семантической HTML-разметки --&gt;</span>
+&lt;<span class="keyword">header</span>&gt;
+  &lt;<span class="keyword">h1</span>&gt;Заголовок страницы&lt;/<span class="keyword">h1</span>&gt;
+  &lt;<span class="keyword">nav</span>&gt;
+    &lt;<span class="keyword">ul</span>&gt;
+      &lt;<span class="keyword">li</span>&gt;&lt;<span class="keyword">a</span> href=<span class="string">"#"</span>&gt;Главная&lt;/<span class="keyword">a</span>&gt;&lt;/<span class="keyword">li</span>&gt;
+      &lt;<span class="keyword">li</span>&gt;&lt;<span class="keyword">a</span> href=<span class="string">"#"</span>&gt;О нас&lt;/<span class="keyword">a</span>&gt;&lt;/<span class="keyword">li</span>&gt;
+    &lt;/<span class="keyword">ul</span>&gt;
+  &lt;/<span class="keyword">nav</span>&gt;
+&lt;/<span class="keyword">header</span>&gt;
+
+&lt;<span class="keyword">main</span>&gt;
+  &lt;<span class="keyword">article</span>&gt;
+    &lt;<span class="keyword">h2</span>&gt;Заголовок статьи&lt;/<span class="keyword">h2</span>&gt;
+    &lt;<span class="keyword">p</span>&gt;Содержание статьи...&lt;/<span class="keyword">p</span>&gt;
+  &lt;/<span class="keyword">article</span>&gt;
+&lt;/<span class="keyword">main</span>&gt;</code></pre>
+            </div>
+            
+            <h3>CSS: Flexbox пример</h3>
+            <div class="code-example">
+                <pre><code><span class="comment">/* CSS Flexbox для создания адаптивного макета */</span>
+<span class="keyword">.container</span> {
+  <span class="function">display</span>: flex;
+  <span class="function">flex-wrap</span>: wrap;
+  <span class="function">justify-content</span>: space-between;
+  <span class="function">gap</span>: 20px;
+}
+
+<span class="keyword">.item</span> {
+  <span class="function">flex</span>: 1 1 300px;
+  <span class="function">background-color</span>: #f0f0f0;
+  <span class="function">padding</span>: 20px;
+  <span class="function">border-radius</span>: 8px;
+}</code></pre>
+            </div>
+            
+            <h3>Интерактивный пример на JavaScript</h3>
+            <div class="interactive-example">
+                <p>Измените внешний вид элемента с помощью кнопок:</p>
+                <div class="example-controls">
+                    <button id="colorBtn">Изменить цвет</button>
+                    <button id="sizeBtn">Увеличить размер</button>
+                    <button id="rotateBtn">Повернуть</button>
+                    <button id="resetBtn">Сбросить</button>
+                </div>
+                <div id="exampleBox">Интерактивный элемент</div>
+                <p id="exampleCode">// Код JavaScript для этого примера будет отображен здесь</p>
+            </div>
+        </section>
+
+        <!-- Дорожная карта обучения -->
+        <section id="roadmap">
+            <h2><i class="fas fa-road"></i> Дорожная Карта Обучения</h2>
+            <p>Пошаговый план для освоения фронтенд-разработки:</p>
+            
+            <div class="roadmap">
+                <div class="roadmap-item">
+                    <div class="roadmap-number">1</div>
+                    <div>
+                        <h3>Основы HTML и CSS</h3>
+                        <p>Изучите семантическую разметку, CSS-селекторы, блочную модель, позиционирование и основы адаптивного дизайна.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-number">2</div>
+                    <div>
+                        <h3>JavaScript и DOM API</h3>
+                        <p>Освойте основы JavaScript: переменные, функции, условия, циклы, массивы, объекты. Научитесь работать с DOM для создания интерактивных интерфейсов.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-number">3</div>
+                    <div>
+                        <h3>Инструменты разработчика</h3>
+                        <p>Познакомьтесь с Git, системой контроля версий, npm/yarn, инструментами сборки (Webpack, Vite) и отладки в браузере.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-number">4</div>
+                    <div>
+                        <h3>Фреймворки и библиотеки</h3>
+                        <p>Выберите и изучите один из популярных фреймворков: React, Vue.js или Angular для создания сложных веб-приложений.</p>
+                    </div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-number">5</div>
+                    <div>
+                        <h3>Продвинутые темы</h3>
+                        <p>Оптимизация производительности, PWA, TypeScript, тестирование, SSR, доступность (a11y) и кросс-браузерная совместимость.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Методы защиты -->
-        <section id="protection">
-            <h2 class="section-title">Методы защиты от DDoS-атак</h2>
-            <div class="features">
-                <div class="feature-card">
-                    <h3>Фильтрация трафика</h3>
-                    <p>Использование специализированных систем для анализа и фильтрации входящего трафика с целью отсечения вредоносных запросов.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Балансировка нагрузки</h3>
-                    <p>Распределение нагрузки между несколькими серверами для предотвращения перегрузки при DDoS-атаках.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Геофильтрация</h3>
-                    <p>Ограничение доступа к ресурсу из определенных географических регионов, откуда чаще всего исходят атаки.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Использование CDN</h3>
-                    <p>Применение сетей доставки контента для распределения нагрузки и защиты от атак на инфраструктуру.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Анализ поведения</h3>
-                    <p>Системы, анализирующие поведение пользователей и выявляющие аномальную активность, характерную для DDoS-атак.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Резервирование ресурсов</h3>
-                    <p>Создание избыточных мощностей для обработки пиковых нагрузок во время атак.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Инструменты -->
-        <section id="tools">
-            <h2 class="section-title">Инструменты мониторинга и защиты</h2>
-            <div class="features">
-                <div class="feature-card">
-                    <h3>Cloudflare</h3>
-                    <p>Популярный сервис защиты от DDoS-атак с глобальной сетью доставки контента.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Akamai</h3>
-                    <p>Комплексное решение для защиты веб-приложений и инфраструктуры от различных типов атак.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Arbor Networks</h3>
-                    <p>Специализированные решения для обнаружения и смягчения DDoS-атак в корпоративных сетях.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Incapsula</h3>
-                    <p>Облачный сервис защиты веб-сайтов от DDoS-атак и других угроз безопасности.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Форум -->
-        <section id="forum">
-            <h2 class="section-title">Форум сообщества</h2>
-            <div class="forum-preview">
-                <div class="forum-header">
-                    <h3>Активные обсуждения</h3>
-                    <a href="#" class="btn">Создать тему</a>
-                </div>
-                <div class="forum-topics">
-                    <div class="topic">
-                        <div class="topic-info">
-                            <h4>Как защитить небольшой сайт от DDoS-атак с ограниченным бюджетом?</h4>
-                            <div class="topic-meta">Автор: Admin • Дата: 15.10.2023 • Ответов: 24</div>
-                        </div>
-                        <div class="topic-stats">
-                            <div>Просмотров: 156</div>
-                        </div>
-                    </div>
-                    <div class="topic">
-                        <div class="topic-info">
-                            <h4>Сравнение эффективности различных CDN-провайдеров против DDoS</h4>
-                            <div class="topic-meta">Автор: SecurityExpert • Дата: 12.10.2023 • Ответов: 18</div>
-                        </div>
-                        <div class="topic-stats">
-                            <div>Просмотров: 203</div>
-                        </div>
-                    </div>
-                    <div class="topic">
-                        <div class="topic-info">
-                            <h4>Новые тенденции в DDoS-атаках 2023 года</h4>
-                            <div class="topic-meta">Автор: Analyst • Дата: 08.10.2023 • Ответов: 32</div>
-                        </div>
-                        <div class="topic-stats">
-                            <div>Просмотров: 287</div>
-                        </div>
-                    </div>
-                    <div class="topic">
-                        <div class="topic-info">
-                            <h4>Настройка fail2ban для защиты от DDoS на уровне приложения</h4>
-                            <div class="topic-meta">Автор: SysAdmin • Дата: 05.10.2023 • Ответов: 15</div>
-                        </div>
-                        <div class="topic-stats">
-                            <div>Просмотров: 134</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Ресурсы для изучения -->
+        <section id="resources">
+            <h2><i class="fas fa-book-open"></i> Полезные Ресурсы</h2>
+            <p>Материалы для углубленного изучения фронтенд-разработки:</p>
+            
+            <ul class="resources-list">
+                <li>
+                    <a href="https://developer.mozilla.org/ru/docs/Web" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        MDN Web Docs - Документация по веб-технологиям
+                    </a>
+                </li>
+                <li>
+                    <a href="https://learn.javascript.ru/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        Современный учебник JavaScript
+                    </a>
+                </li>
+                <li>
+                    <a href="https://css-tricks.com/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        CSS-Tricks - Ресурс по CSS и фронтенд-разработке
+                    </a>
+                </li>
+                <li>
+                    <a href="https://frontendmasters.com/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        Frontend Masters - Курсы от экспертов
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/getify/You-Dont-Know-JS" target="_blank">
+                        <i class="fab fa-github"></i>
+                        Серия книг "You Don't Know JS" (на GitHub)
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.freecodecamp.org/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        freeCodeCamp - Бесплатные интерактивные курсы
+                    </a>
+                </li>
+            </ul>
         </section>
     </main>
 
     <!-- Подвал -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>О проекте</h3>
-                    <p>DDoSShield - информационный ресурс, посвященный вопросам защиты от распределённых атак типа «отказ в обслуживании» (DDoS).</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Быстрые ссылки</h3>
-                    <a href="#home">Главная</a>
-                    <a href="#about">О проекте</a>
-                    <a href="#protection">Методы защиты</a>
-                    <a href="#tools">Инструменты</a>
-                    <a href="#forum">Форум</a>
-                </div>
-                <div class="footer-section">
-                    <h3>Контакты</h3>
-                    <p>Email: info@ddosshield.ru</p>
-                    <p>Телефон: +7 (XXX) XXX-XX-XX</p>
-                </div>
+    <footer>
+        <div class="container footer-content">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <span>Frontend Masters</span>
             </div>
-            <div class="copyright">
-                <p>&copy; 2023 DDoSShield. Все права защищены.</p>
+            
+            <p>Информационный ресурс по фронтенд-разработке. Все материалы носят образовательный характер.</p>
+            
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-vk"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
             </div>
+            
+            <p class="copyright">&copy; 2023 Frontend Masters. Все права защищены.</p>
         </div>
     </footer>
+
+    <script>
+        // Мобильное меню
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = mobileMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Плавная прокрутка для навигации
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Закрыть мобильное меню после клика
+                if (mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+        
+        // Интерактивный пример
+        const exampleBox = document.getElementById('exampleBox');
+        const colorBtn = document.getElementById('colorBtn');
+        const sizeBtn = document.getElementById('sizeBtn');
+        const rotateBtn = document.getElementById('rotateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const exampleCode = document.getElementById('exampleCode');
+        
+        let colorIndex = 0;
+        const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'];
+        
+        let size = 1;
+        let rotation = 0;
+        
+        // Функция для обновления отображения кода
+        function updateCodeDisplay(action) {
+            let code = '';
+            switch(action) {
+                case 'color':
+                    code = `// Изменение цвета фона
+exampleBox.style.backgroundColor = '${colors[colorIndex]}';`;
+                    break;
+                case 'size':
+                    code = `// Увеличение размера
+exampleBox.style.transform = 'scale(${size}) rotate(${rotation}deg)';`;
+                    break;
+                case 'rotate':
+                    code = `// Вращение элемента
+exampleBox.style.transform = 'scale(${size}) rotate(${rotation}deg)';`;
+                    break;
+                case 'reset':
+                    code = `// Сброс стилей к исходным значениям
+exampleBox.style.backgroundColor = '#3498db';
+exampleBox.style.transform = 'scale(1) rotate(0deg)';`;
+                    break;
+            }
+            exampleCode.textContent = code;
+        }
+        
+        colorBtn.addEventListener('click', () => {
+            colorIndex = (colorIndex + 1) % colors.length;
+            exampleBox.style.backgroundColor = colors[colorIndex];
+            updateCodeDisplay('color');
+        });
+        
+        sizeBtn.addEventListener('click', () => {
+            size += 0.2;
+            exampleBox.style.transform = `scale(${size}) rotate(${rotation}deg)`;
+            updateCodeDisplay('size');
+        });
+        
+        rotateBtn.addEventListener('click', () => {
+            rotation += 45;
+            exampleBox.style.transform = `scale(${size}) rotate(${rotation}deg)`;
+            updateCodeDisplay('rotate');
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            colorIndex = 0;
+            size = 1;
+            rotation = 0;
+            exampleBox.style.backgroundColor = '#3498db';
+            exampleBox.style.transform = 'scale(1) rotate(0deg)';
+            updateCodeDisplay('reset');
+        });
+        
+        // Подсветка активного раздела в навигации
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCodeDisplay('reset');
+        });
+    </script>
 </body>
 </html>
